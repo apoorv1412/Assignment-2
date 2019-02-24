@@ -6,14 +6,14 @@ public class Flight {
     private int left;
     private static int number = 0;
     private final int capacity, flightID;
-    private List<Integer> passengerList;
+    private List<Passenger> myPassengers;
 
     Flight(int capacity) {
         this.capacity = capacity;
         this.flightID = number;
         ++number;
         setLeft(capacity);
-        this.passengerList = new ArrayList<>();
+        this.myPassengers = new ArrayList<>();
     }
 
     public int getCapacity() {
@@ -32,18 +32,21 @@ public class Flight {
         return flightID;
     }
 
-    public void addReservation(int id) {
+    public void addReservation(Passenger p) {
         --this.left;
-        passengerList.add(id);
+        myPassengers.add(p);
     }
 
-    public void removeReservation(int id){
+    public void removeReservation(Passenger p){
         ++this.left;
-        passengerList.remove(id);
+        myPassengers.remove(p);
     }
 
     public int returnSum() {
         return this.capacity-this.left;
     }
 
+    public List<Passenger> getMyPassengers() {
+        return this.myPassengers;
+    }
 }
