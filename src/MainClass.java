@@ -10,6 +10,5 @@ public class MainClass {
         for (int i = 0; i < 500; ++i)
             d.addPassenger();
 
-
     }
 }
