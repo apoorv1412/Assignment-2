@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Flight {
@@ -6,14 +7,17 @@ public class Flight {
     private int left;
     private static int number = 0;
     private final int capacity, flightID;
-    private List<Passenger> myPassengers;
+    private HashMap<Passenger, Integer> myPassengers;
 
     Flight(int capacity) {
         this.capacity = capacity;
         this.flightID = number;
         ++number;
-        setLeft(capacity);
-        this.myPassengers = new ArrayList<>();
+        this.myPassengers = new HashMap<>();
+    }
+
+    void addPassenger(Passenger p) {
+        this.myPassengers.put(p,0);
     }
 
     public int getCapacity() {
@@ -24,29 +28,25 @@ public class Flight {
         return left;
     }
 
-    public void setLeft(int left) {
-        this.left = left;
-    }
-
     public int getFlightID() {
         return flightID;
     }
 
     public void addReservation(Passenger p) {
         --this.left;
-        myPassengers.add(p);
+        myPassengers.put(p,1);
     }
 
     public void removeReservation(Passenger p){
         ++this.left;
-        myPassengers.remove(p);
+        myPassengers.put(p,0);
     }
 
     public int returnSum() {
         return this.capacity-this.left;
     }
 
-    public List<Passenger> getMyPassengers() {
+    public HashMap<Passenger, Integer> getMyPassengers() {
         return this.myPassengers;
     }
 }
