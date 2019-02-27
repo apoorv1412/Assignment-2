@@ -36,11 +36,13 @@ public class Database {
             System.out.println("not found");
             return;
         }
+        System.out.println("Seat reserved");
         f.addReservation(p);
         ++total;
     }
 
     void Cancel(Flight f, int id) {
+        System.out.println("cancel");
         Passenger p = this.passengerList.get(id);
         if (p == null) {
             System.out.println("Passenger " + id + " not found");
@@ -55,8 +57,8 @@ public class Database {
     }
 
      void My_Flights(int id) {
+        System.out.println("My flights");
         List<Flight> list = new ArrayList<>();
-         System.out.println("Passenger " + id);
         Passenger p = this.passengerList.get(id);
          if (p == null)
              return;
@@ -70,10 +72,12 @@ public class Database {
     }
 
     void Total_Reservations() {
-        System.out.println(this.total);
+        System.out.println("total res " + this.total);
+       // System.out.println();
     }
 
     void Transfer(Flight f1, Flight f2, int id) {
+        System.out.println("transfer");
         Passenger p = this.passengerList.get(id);
         if (p == null)
             return;

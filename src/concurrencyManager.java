@@ -1,27 +1,95 @@
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class concurrencyManager implements Runnable {
+public class concurrencyManager {
 
-    HashMap<Flight, Queue<ArrayList<Integer>>> lockTable;
     Database data;
-    HashMap<Flight, Integer> lockType;
     ArrayList< int[] > transactions;
-    int tasknum = 0;
+    ReadWriteLock[] locks;
 
     concurrencyManager(Database d, ArrayList< int[] > transactions) {
         this.data = d;
-        for (Flight f : this.data.getFlightList()) {
-            lockTable.put(f, new LinkedList<>());
-            lockType.put(f, 0);
-        }
         this.transactions = transactions;
+        locks = new ReentrantReadWriteLock[5];
+        for (int i = 0; i < 5; ++i)
+            locks[i] = new ReentrantReadWriteLock();
     }
 
-    @Override
-    public void run() {
-        int[] tuple = transactions.get(tasknum);
+    void runSimulation() throws InterruptedException {
 
+        int numThreads = 5;
+        ExecutorService exec = Executors.newFixedThreadPool(numThreads);
+
+        int numTransactions = transactions.size();
+        int cnt = numTransactions/numThreads;
+        transactionList[] transactionsForThread = new transactionList[numThreads];
+
+        for (int i = 0; i < numThreads; ++i)
+            transactionsForThread[i] = new transactionList(data,locks);
+
+        ArrayList<ArrayList< int[] >> x = new ArrayList<>();
+        for (int i = 0; i < numThreads; ++i) {
+            x.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < numTransactions; ++i) {
+            x.get(i%numThreads).add(transactions.get(i));
+        }
+
+        for (int i = 0; i < numThreads; ++i) {
+            transactionsForThread[i].setTransactions(x.get(i));
+        }
+
+        for (int i = 0; i < numThreads; ++i) {
+            exec.execute(transactionsForThread[i]);
+        }
+
+        if (!exec.isTerminated()) {
+            exec.shutdown();
+            exec.awaitTermination(5L, TimeUnit.SECONDS);
+        }
+    }
+
+    void serialImplement() throws InterruptedException {
+
+        int numThreads = 5;
+        ExecutorService exec = Executors.newFixedThreadPool(numThreads);
+
+        int numTransactions = transactions.size();
+        int cnt = numTransactions/numThreads;
+        transactionList[] transactionsForThread = new transactionList[numThreads];
+
+        for (int i = 0; i < numThreads; ++i)
+            transactionsForThread[i] = new transactionList(data,locks);
+
+        ArrayList<ArrayList< int[] >> x = new ArrayList<>();
+        for (int i = 0; i < numThreads; ++i) {
+            x.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < numTransactions; ++i) {
+            x.get(i%numThreads).add(transactions.get(i));
+        }
+
+        for (int i = 0; i < numThreads; ++i) {
+            transactionsForThread[i].setTransactions(x.get(i));
+        }
+
+        for (int i = 0; i < numThreads; ++i) {
+            exec.execute(transactionsForThread[i]);
+        }
+
+        if (!exec.isTerminated()) {
+            exec.shutdown();
+            exec.awaitTermination(5L, TimeUnit.SECONDS);
+        }
     }
 }
+
+
