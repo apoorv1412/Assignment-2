@@ -35,15 +35,22 @@ public class MainClass {
             transactions.add(new int[]{type, f1, f2, pass});
         }
 
-        transactions2.add(new int[]{0,0,0,0});
-        transactions2.add(new int[]{4,0,1,1 });
+//        transactions2.add(new int[]{0,0,0,0});
+//        transactions2.add(new int[]{4,0,1,1 });
+
+        transactions2.add(new int[]{0,1,0,0});
+        transactions2.add(new int[]{0,0,0,1});
+        transactions2.add(new int[]{1,1,0,0});
+        transactions2.add(new int[]{4,0,1,1});
+        transactions2.add(new int[]{2,1,0,1});
+        transactions2.add(new int[]{3,1,0,0});
 
 
         for (int[] a : transactions)
             System.out.println(a[0] + " " + a[1] + " " + a[2] + " " + a[3]);
 
         concurrencyManager manager = new concurrencyManager(d,transactions2);
-        manager.runSimulation();
+        manager.serialImplement();
 
 
 

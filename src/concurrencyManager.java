@@ -58,15 +58,15 @@ public class concurrencyManager {
 
     void serialImplement() throws InterruptedException {
 
-        int numThreads = 5;
+        int numThreads = 1;
         ExecutorService exec = Executors.newFixedThreadPool(numThreads);
 
         int numTransactions = transactions.size();
         int cnt = numTransactions/numThreads;
-        transactionList[] transactionsForThread = new transactionList[numThreads];
+        serialImplementation[] transactionsForThread = new serialImplementation[numThreads];
 
         for (int i = 0; i < numThreads; ++i)
-            transactionsForThread[i] = new transactionList(data,locks);
+            transactionsForThread[i] = new serialImplementation(data,locks);
 
         ArrayList<ArrayList< int[] >> x = new ArrayList<>();
         for (int i = 0; i < numThreads; ++i) {
