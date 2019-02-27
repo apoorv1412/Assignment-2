@@ -14,6 +14,7 @@ public class Flight {
         this.flightID = number;
         ++number;
         this.myPassengers = new HashMap<>();
+        this.left = capacity;
     }
 
     void addPassenger(Passenger p) {
@@ -33,6 +34,8 @@ public class Flight {
     }
 
     public void addReservation(Passenger p) {
+        if (myPassengers.get(p) == 1)
+            return;
         --this.left;
         myPassengers.put(p,1);
     }
